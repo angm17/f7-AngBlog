@@ -1,0 +1,76 @@
+<template>
+	<div class="page" data-name="addPost">
+    <div class="navbar">
+	    <div class="navbar-inner sliding">
+	      <div class="left">
+	        <a href="#" @click="back" class="link back">
+	          <i class="icon icon-back"></i>
+	        </a>
+	      </div>
+	      <div class="title">Add a Post</div>
+	      <div class="right"> 
+	      	<a href="#" class="link panel-open icon-only"><i class="fas fa-bars"></i></a>
+	      </div>
+	    </div>
+    </div>
+    <div class="page-content">
+		<div class="card">
+			<div class="list no-hairlines-md">
+  				<ul>
+					<li class="item-content item-input">
+					  <div class="item-inner">
+					    <div class="item-title item-floating-label">Post Title</div>
+					    <div class="item-input-wrap">
+					      <input type="text" class="PostTitle" placeholder="Post Title">
+					      <span class="input-clear-button"></span>
+					    </div>
+					  </div>
+					</li>
+					<li class="item-content item-input">
+					  <div class="item-inner">
+					    <div class="item-title item-floating-label">Content</div>
+					    <div class="item-input-wrap">
+					      	<textarea class="resizable content" placeholder="Content"></textarea>
+          					<span class="input-clear-button"></span>
+					    </div>
+					  </div>
+					</li>
+					<li class="item-content item-input">
+						<button class="button button-fill color-orange" @click="addPost">Add new post</button>
+					</li>
+  				</ul>
+  			</div>
+		</div>
+    </div>
+  </div>
+</template>
+
+<style>
+	
+</style>
+
+<script>
+	return {
+		methods: {
+			addPost: function () {
+				let title = $$('.PostTitle').val();
+				let body = $$('.content').val();
+				if (body) {
+					body = {
+						"userId": 1,
+						title,
+						body
+					};
+					this.$root.addPost(body, (err, id)=>{
+						if (!err) {
+							this.$app.router.navigate(`/post/${id}`);
+						}
+					});
+				}
+			},
+			back: function (){
+				this.$app.router.navigate('/');
+			}
+		}
+	}
+</script>

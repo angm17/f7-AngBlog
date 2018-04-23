@@ -1,0 +1,103 @@
+<template>
+  <div class="page" data-name="post">
+    <div class="navbar">
+	    <div class="navbar-inner sliding">
+	      <div class="left">
+	        <a href="#" @click="back" class="link back">
+	          <i class="icon icon-back"></i>
+	        </a>
+	      </div>
+	      <div class="right"> 
+	      	<a href="#" class="link panel-open icon-only"><i class="fas fa-bars"></i></a>
+	      </div>
+	    </div>
+    </div>
+    <div class="toolbar messagebar">
+		<div class="toolbar-inner">
+			<a class="link text-color-orange" href="#">
+				<i class="fas fa-comment"></i>
+			</a>
+			<div class="messagebar-area">
+				<textarea id="comment" placeholder="Leave a comment"></textarea>
+			</div>
+			<a class="link text-color-orange" @click="addComment" href="#">Send <i class="fa fa-paper-plane icon"></i></a>
+		</div>
+	</div>
+    <div class="page-content">
+		<div class="card">
+			<div class="card-header text-color-orange post">{{post.title}}</div>
+			<div class="card-content card-content-padding postBody">{{post.body}}</div>
+			<div class="card-footer">
+				<a href="#" class="link"><i class="fab fa-facebook"></i></a>
+				<a href="#" class="link"><i class="fab fa-twitter"></i></a>
+				<a href="#" class="link"><i class="fab fa-tumblr"></i></a>
+				<a href="#" class="link"><i class="fab fa-instagram"></i></a>
+				<a href="#" class="link"><i class="fab fa-google-plus"></i></a>
+			</div>
+			<hr>
+			<div class="comments padding-bottom">
+				<div>
+					<h2 class="padding-horizontal text-color-orange text-align-center">{{comments post.id}}</h2>
+					<hr class="padding-horizontal">
+				</div>
+				{{#each comments}}
+            	<div class="comment padding-horizontal border-color-orange" id="comment-{{id}}">
+            		<h4 class="text-color-orange">{{email}} said: </h4>
+            		<p class="text-align-justify">{{body}}</p>
+            		{{#unless @last}}<hr class="padding-horizontal">{{/unless}}
+            	</div>
+            	{{else}}
+            	<p class="text-align-center">Be the first to leave a comment!</p>
+          		{{/each}}
+			</div>
+			
+		</div>
+    </div>
+  </div>
+</template>
+
+
+<style>
+  /*component styles */
+  textarea::placeholder{
+  	color: #ff9800;
+  }
+  .comment p{
+  	white-space: pre-wrap;
+  }
+</style>
+
+<script>
+	return {
+		data: function () {
+			const post = this.$root.getPost(this.$route.params.id);
+			const comments = this.$root.getPostComments(this.$route.params.id);
+			return {
+				post,
+				comments
+			};
+		},
+		methods: {
+			addComment: function () {
+				let body = $$('#comment').val()
+				if (body) {
+					body = {
+					    "postId": parseInt(this.$route.params.id),
+					    "name": "you",
+					    "email": "you@they.me",
+					    body
+					 };
+					this.$root.addComment(body, (err, id)=>{
+						if (!err) {
+							$$('#comment').val('');
+							this.$app.router.navigate(`/post/${this.$route.params.id}`);
+						}
+					});
+				}
+			},
+			back: function (){
+				this.$app.router.navigate('/');
+			}
+		}
+	};
+</script>
